@@ -46,6 +46,7 @@ const SIZE=8;
 let board=[];
 let current=1;
 let animating=false;
+let lastBoard=null;
 let lastGravityDir=null;
 const boardEl=document.getElementById('board');
 const turnDisplay=document.getElementById('turnDisplay');
@@ -59,6 +60,7 @@ function initBoard(){
   board=Array.from({length:SIZE},()=>Array(SIZE).fill(0));
   board[3][3]=-1; board[3][4]=1; board[4][3]=1; board[4][4]=-1;
   current=1;
+  lastBoard=null;
   lastGravityDir=null;
   resultEl.textContent='';
   setButtons(true);
@@ -123,6 +125,7 @@ function onCellClick(r,c){if(animating)return;const valid=getValidMoves(board,cu
 
 function endTurn(){
   if(checkGameEnd()){setButtons(false);return;}
+  lastBoard=board.map(r=>r.slice());
   current=-current;
   const valid=getValidMoves(board,current);
   if(!valid.flat().some(v=>v)){
@@ -150,8 +153,8 @@ async function applyGravity(dir){
     await new Promise(res=>setTimeout(res,delay));
   }
   animating=false;
-  lastGravityDir=dir;
   resultEl.textContent=(current===1?'黒':'白')+'が重力をかけました。';
+  lastGravityDir=dir;
   if(!checkGameEnd()){endTurn();}
   else{setButtons(false);document.getElementById('resetBtn').disabled=false;}
 }
@@ -164,19 +167,17 @@ function setButtons(enabled){
 
 function updateGravityButtons(){
   gravityBtns.forEach(btn=>btn.disabled=false);
-  if(lastGravityDir){
-    const opp=oppositeDir[lastGravityDir];
-    document.querySelector(`.gravityBtn[data-dir="${opp}"]`).disabled=true;
-  }
   gravityBtns.forEach(btn=>{
     if(btn.disabled) return;
     const testDir=btn.dataset.dir;
-    let canMove=false;
-    if(testDir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){canMove=true;}}}}
-    else if(testDir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){canMove=true;}}}}
-    else if(testDir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){canMove=true;}}}}
-    else if(testDir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){canMove=true;}}}}
-    if(!canMove) btn.disabled=true;
+    let testBoard=board.map(r=>r.slice());
+    let moved=false;
+    if(testDir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(testBoard[r][c]!==0&&testBoard[r+1][c]===0){testBoard[r+1][c]=testBoard[r][c];testBoard[r][c]=0;moved=true;}}}}
+    else if(testDir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(testBoard[r][c]!==0&&testBoard[r-1][c]===0){testBoard[r-1][c]=testBoard[r][c];testBoard[r][c]=0;moved=true;}}}}
+    else if(testDir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(testBoard[r][c]!==0&&testBoard[r][c-1]===0){testBoard[r][c-1]=testBoard[r][c];testBoard[r][c]=0;moved=true;}}}}
+    else if(testDir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(testBoard[r][c]!==0&&testBoard[r][c+1]===0){testBoard[r][c+1]=testBoard[r][c];testBoard[r][c]=0;moved=true;}}}}
+    if(!moved) btn.disabled=true;
+    if(lastBoard && JSON.stringify(testBoard)===JSON.stringify(lastBoard)) btn.disabled=true;
   });
 }
 
