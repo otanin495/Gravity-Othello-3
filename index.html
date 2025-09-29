@@ -136,17 +136,22 @@ function endTurn(){
 async function applyGravity(dir){
   animating=true;
   setButtons(false);
-  render();
-  const delay=150;
   let moved=false;
-  if(dir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){board[r+1][c]=board[r][c];board[r][c]=0;moved=true;}}}}
-  else if(dir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){board[r-1][c]=board[r][c];board[r][c]=0;moved=true;}}}}
-  else if(dir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){board[r][c-1]=board[r][c];board[r][c]=0;moved=true;}}}}
-  else if(dir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){board[r][c+1]=board[r][c];board[r][c]=0;moved=true;}}}}
-  render();
-  resultEl.textContent=(current===1?'黒':'白')+'が重力をかけました。';
+  const delay=50;
+  while(true){
+    let stepMoved=false;
+    if(dir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){board[r+1][c]=board[r][c];board[r][c]=0;stepMoved=true;}}}}
+    else if(dir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){board[r-1][c]=board[r][c];board[r][c]=0;stepMoved=true;}}}}
+    else if(dir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){board[r][c-1]=board[r][c];board[r][c]=0;stepMoved=true;}}}}
+    else if(dir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){board[r][c+1]=board[r][c];board[r][c]=0;stepMoved=true;}}}}
+    if(!stepMoved) break;
+    moved=true;
+    render();
+    await new Promise(res=>setTimeout(res,delay));
+  }
   animating=false;
   lastGravityDir=dir;
+  resultEl.textContent=(current===1?'黒':'白')+'が重力をかけました。';
   if(!checkGameEnd()){endTurn();}
   else{setButtons(false);document.getElementById('resetBtn').disabled=false;}
 }
@@ -158,9 +163,7 @@ function setButtons(enabled){
 }
 
 function updateGravityButtons(){
-  gravityBtns.forEach(btn=>{
-    btn.disabled=false;
-  });
+  gravityBtns.forEach(btn=>btn.disabled=false);
   if(lastGravityDir){
     const opp=oppositeDir[lastGravityDir];
     document.querySelector(`.gravityBtn[data-dir="${opp}"]`).disabled=true;
@@ -168,12 +171,12 @@ function updateGravityButtons(){
   gravityBtns.forEach(btn=>{
     if(btn.disabled) return;
     const testDir=btn.dataset.dir;
-    let moved=false;
-    if(testDir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){moved=true;}}}}
-    else if(testDir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){moved=true;}}}}
-    else if(testDir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){moved=true;}}}}
-    else if(testDir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){moved=true;}}}}
-    if(!moved) btn.disabled=true;
+    let canMove=false;
+    if(testDir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){canMove=true;}}}}
+    else if(testDir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){canMove=true;}}}}
+    else if(testDir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){canMove=true;}}}}
+    else if(testDir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){canMove=true;}}}}
+    if(!canMove) btn.disabled=true;
   });
 }
 
@@ -185,7 +188,7 @@ function checkGameEnd(){
   const whiteCan=validWhite.flat().some(v=>v);
   const filled=counts.black+counts.white===SIZE*SIZE;
   if(filled||(!blackCan&&!whiteCan)){
-    let msg='ゲーム終了\n';
+    let msg='終局\n';
     if(counts.black>counts.white){msg+='黒の勝ち ('+counts.black+' 対 '+counts.white+')';}
     else if(counts.white>counts.black){msg+='白の勝ち ('+counts.white+' 対 '+counts.black+')';}
     else{msg+='引き分け ('+counts.black+' 対 '+counts.white+')';}
