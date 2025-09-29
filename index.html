@@ -46,17 +46,20 @@ const SIZE=8;
 let board=[];
 let current=1;
 let animating=false;
+let lastGravityDir=null;
 const boardEl=document.getElementById('board');
 const turnDisplay=document.getElementById('turnDisplay');
 const blackCountEl=document.getElementById('blackCount');
 const whiteCountEl=document.getElementById('whiteCount');
 const resultEl=document.getElementById('result');
 const gravityBtns=document.querySelectorAll('.gravityBtn');
+const oppositeDir={up:'down',down:'up',left:'right',right:'left'};
 
 function initBoard(){
   board=Array.from({length:SIZE},()=>Array(SIZE).fill(0));
   board[3][3]=-1; board[3][4]=1; board[4][3]=1; board[4][4]=-1;
   current=1;
+  lastGravityDir=null;
   resultEl.textContent='';
   setButtons(true);
 }
@@ -127,31 +130,51 @@ function endTurn(){
   }
   render();
   if(checkGameEnd()){setButtons(false);return;}
+  updateGravityButtons();
 }
 
 async function applyGravity(dir){
   animating=true;
   setButtons(false);
   render();
-  const delay=150;let moved=true;
-  while(moved){
-    moved=false;
-    if(dir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){board[r+1][c]=board[r][c];board[r][c]=0;moved=true;}}}}
-    else if(dir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){board[r-1][c]=board[r][c];board[r][c]=0;moved=true;}}}}
-    else if(dir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){board[r][c-1]=board[r][c];board[r][c]=0;moved=true;}}}}
-    else if(dir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){board[r][c+1]=board[r][c];board[r][c]=0;moved=true;}}}}
-    render();
-    if(moved)await new Promise(res=>setTimeout(res,delay));
-  }
+  const delay=150;
+  let moved=false;
+  if(dir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){board[r+1][c]=board[r][c];board[r][c]=0;moved=true;}}}}
+  else if(dir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){board[r-1][c]=board[r][c];board[r][c]=0;moved=true;}}}}
+  else if(dir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){board[r][c-1]=board[r][c];board[r][c]=0;moved=true;}}}}
+  else if(dir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){board[r][c+1]=board[r][c];board[r][c]=0;moved=true;}}}}
+  render();
   resultEl.textContent=(current===1?'黒':'白')+'が重力をかけました。';
   animating=false;
-  if(!checkGameEnd()){setButtons(true);endTurn();}
+  lastGravityDir=dir;
+  if(!checkGameEnd()){endTurn();}
   else{setButtons(false);document.getElementById('resetBtn').disabled=false;}
 }
 
 function setButtons(enabled){
   gravityBtns.forEach(btn=>btn.disabled=!enabled);
   document.getElementById('resetBtn').disabled=false;
+  if(enabled) updateGravityButtons();
+}
+
+function updateGravityButtons(){
+  gravityBtns.forEach(btn=>{
+    btn.disabled=false;
+  });
+  if(lastGravityDir){
+    const opp=oppositeDir[lastGravityDir];
+    document.querySelector(`.gravityBtn[data-dir="${opp}"]`).disabled=true;
+  }
+  gravityBtns.forEach(btn=>{
+    if(btn.disabled) return;
+    const testDir=btn.dataset.dir;
+    let moved=false;
+    if(testDir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){moved=true;}}}}
+    else if(testDir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){moved=true;}}}}
+    else if(testDir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){moved=true;}}}}
+    else if(testDir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){moved=true;}}}}
+    if(!moved) btn.disabled=true;
+  });
 }
 
 function checkGameEnd(){
