@@ -187,12 +187,6 @@ body {
   background-color: #FFF;
 }
 
-.turn-info {
-  font-size: 18px;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
 .message {
   font-size: 20px;
   margin-bottom: 15px;
@@ -434,7 +428,6 @@ let current = 1;
 let animating = false;
 let boardHistory = [];
 const boardEl = document.getElementById('board');
-const turnDisplay = document.getElementById('turnDisplay');
 const blackCountEl = document.getElementById('blackCount');
 const whiteCountEl = document.getElementById('whiteCount');
 const messageEl = document.getElementById('message');
@@ -491,7 +484,6 @@ function render() {
   const counts = countPieces(board);
   blackCountEl.textContent = counts.black;
   whiteCountEl.textContent = counts.white;
-  turnDisplay.textContent = current === 1 ? '黒' : '白';
 }
 
 function inBounds(r, c) {
