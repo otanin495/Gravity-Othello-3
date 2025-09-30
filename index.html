@@ -28,9 +28,29 @@ body {
   color: #333;
 }
 
-.score {
-  font-size: 24px;
-  margin-bottom: 15px;
+.board-selection {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.size-button {
+  padding: 15px 30px;
+  font-size: 18px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px 0;
+  display: block;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  transition: background-color 0.3s;
+}
+
+.size-button:hover {
+  background-color: #1976D2;
 }
 
 .board-container {
@@ -43,12 +63,25 @@ body {
 
 .board {
   display: inline-grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
   gap: 2px;
   background-color: #000000;
   padding: 10px;
   border-radius: 8px;
+}
+
+.board.size-4 {
+  grid-template-columns: repeat(4, 60px);
+  grid-template-rows: repeat(4, 60px);
+}
+
+.board.size-6 {
+  grid-template-columns: repeat(6, 55px);
+  grid-template-rows: repeat(6, 55px);
+}
+
+.board.size-8 {
+  grid-template-columns: repeat(8, 50px);
+  grid-template-rows: repeat(8, 50px);
 }
 
 .cell {
@@ -57,6 +90,19 @@ body {
   position: relative;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.cell.size-4 {
+  width: 60px;
+  height: 60px;
+}
+
+.cell.size-6 {
+  width: 55px;
+  height: 55px;
+}
+
+.cell.size-8 {
   width: 50px;
   height: 50px;
 }
@@ -87,6 +133,19 @@ body {
   transform: translate(-50%, -50%);
   border: 2px solid #333;
   transition: all 0.2s linear;
+}
+
+.piece.size-4 {
+  width: 50px;
+  height: 50px;
+}
+
+.piece.size-6 {
+  width: 45px;
+  height: 45px;
+}
+
+.piece.size-8 {
   width: 40px;
   height: 40px;
 }
@@ -170,9 +229,10 @@ body {
   padding: 0;
 }
 
-#resetBtn {
+.bottom-buttons {
+  display: flex;
+  gap: 10px;
   margin-top: 10px;
-  width: 140px;
 }
 
 button {
@@ -197,48 +257,8 @@ button:disabled {
   background-color: #90CAF9;
 }
 
-.info-panel {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin-top: 10px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.turn-info {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.score-display {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  font-size: 16px;
-}
-
-.score-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.color-indicator {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #333;
-}
-
-.color-indicator.black {
-  background-color: #000;
-}
-
-.color-indicator.white {
-  background-color: #FFF;
+.hidden {
+  display: none;
 }
 
 @media (max-width: 768px) {
@@ -250,25 +270,51 @@ button:disabled {
     font-size: 24px;
   }
 
-  .score {
-    font-size: 18px;
-  }
-
   .message {
     font-size: 16px;
   }
 
-  .board {
+  .board.size-4 {
+    grid-template-columns: repeat(4, 45px);
+    grid-template-rows: repeat(4, 45px);
+  }
+
+  .board.size-6 {
+    grid-template-columns: repeat(6, 42px);
+    grid-template-rows: repeat(6, 42px);
+  }
+
+  .board.size-8 {
     grid-template-columns: repeat(8, 40px);
     grid-template-rows: repeat(8, 40px);
   }
 
-  .cell {
+  .cell.size-4 {
+    width: 45px;
+    height: 45px;
+  }
+
+  .cell.size-6 {
+    width: 42px;
+    height: 42px;
+  }
+
+  .cell.size-8 {
     width: 40px;
     height: 40px;
   }
 
-  .piece {
+  .piece.size-4 {
+    width: 38px;
+    height: 38px;
+  }
+
+  .piece.size-6 {
+    width: 35px;
+    height: 35px;
+  }
+
+  .piece.size-8 {
     width: 32px;
     height: 32px;
   }
@@ -276,10 +322,6 @@ button:disabled {
   button {
     font-size: 14px;
     padding: 8px 16px;
-  }
-
-  .game-controls {
-    max-width: 100%;
   }
 
   .arrow-row button {
@@ -290,29 +332,49 @@ button:disabled {
 }
 
 @media (max-width: 480px) {
-  .board {
+  .board.size-4 {
+    grid-template-columns: repeat(4, 40px);
+    grid-template-rows: repeat(4, 40px);
+  }
+
+  .board.size-6 {
+    grid-template-columns: repeat(6, 37px);
+    grid-template-rows: repeat(6, 37px);
+  }
+
+  .board.size-8 {
     grid-template-columns: repeat(8, 35px);
     grid-template-rows: repeat(8, 35px);
   }
 
-  .cell {
+  .cell.size-4 {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cell.size-6 {
+    width: 37px;
+    height: 37px;
+  }
+
+  .cell.size-8 {
     width: 35px;
     height: 35px;
   }
 
-  .piece {
+  .piece.size-4 {
+    width: 32px;
+    height: 32px;
+  }
+
+  .piece.size-6 {
+    width: 30px;
+    height: 30px;
+  }
+
+  .piece.size-8 {
     width: 28px;
     height: 28px;
-  }
-
-  .game-controls {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .game-controls button {
-    width: 120px;
-    margin: 3px 0;
   }
 }
 </style>
@@ -322,230 +384,389 @@ button:disabled {
     <div class="game-title">Gravity Othello 3</div>
   </div>
 
+  <div id="boardSelection" class="board-selection">
+    <p>盤面サイズを選択してください</p>
+    <button class="size-button" onclick="startGame(4)">4×4盤</button>
+    <button class="size-button" onclick="startGame(6)">6×6盤</button>
+    <button class="size-button" onclick="startGame(8)">8×8盤</button>
+  </div>
+
+  <div id="gameArea" class="hidden">
     <div class="score-display">
-    <div class="score-item">
-      <div class="color-indicator black"></div>
-      <span id="blackCount">2</span>
+      <div class="score-item">
+        <div class="color-indicator black"></div>
+        <span id="blackCount">2</span>
+      </div>
+      <div class="score-item">
+        <div class="color-indicator white"></div>
+        <span id="whiteCount">2</span>
+      </div>
     </div>
-    <div class="score-item">
-      <div class="color-indicator white"></div>
-      <span id="whiteCount">2</span>
-    </div>
-  </div>
 
-  <div class="board-container">
-    <div id="board" class="board"></div>
-  </div>
-
-  <div class="turn-info">
-    <strong>現在の手番:</strong> <span id="turnDisplay">黒</span>
-  </div>
-
-  <div class="message" id="message"></div>
-
-  <div class="game-controls">
-    <div class="arrow-row">
-      <button class="gravityBtn" data-dir="up">↑</button>
+    <div class="board-container">
+      <div id="board" class="board"></div>
     </div>
-    <div class="arrow-row">
-      <button class="gravityBtn" data-dir="left">←</button>
-      <button class="gravityBtn" data-dir="right">→</button>
+
+    <div class="turn-info">
+      <strong>現在の手番:</strong> <span id="turnDisplay">黒</span>
     </div>
-    <div class="arrow-row">
-      <button class="gravityBtn" data-dir="down">↓</button>
+
+    <div class="message" id="message"></div>
+
+    <div class="game-controls">
+      <div class="arrow-row">
+        <button class="gravityBtn" data-dir="up">↑</button>
+      </div>
+      <div class="arrow-row">
+        <button class="gravityBtn" data-dir="left">←</button>
+        <button class="gravityBtn" data-dir="right">→</button>
+      </div>
+      <div class="arrow-row">
+        <button class="gravityBtn" data-dir="down">↓</button>
+      </div>
+      <div class="bottom-buttons">
+        <button id="resetBtn">リセット</button>
+        <button id="backBtn">盤面選択に戻る</button>
+      </div>
     </div>
-    <button id="resetBtn">リセット</button>
   </div>
 
 <script>
-const SIZE=8;
-let board=[];
-let current=1;
-let animating=false;
-let boardHistory=[];
-const boardEl=document.getElementById('board');
-const turnDisplay=document.getElementById('turnDisplay');
-const blackCountEl=document.getElementById('blackCount');
-const whiteCountEl=document.getElementById('whiteCount');
-const messageEl=document.getElementById('message');
-const gravityBtns=document.querySelectorAll('.gravityBtn');
+let SIZE = 8;
+let board = [];
+let current = 1;
+let animating = false;
+let boardHistory = [];
+const boardEl = document.getElementById('board');
+const turnDisplay = document.getElementById('turnDisplay');
+const blackCountEl = document.getElementById('blackCount');
+const whiteCountEl = document.getElementById('whiteCount');
+const messageEl = document.getElementById('message');
+const gravityBtns = document.querySelectorAll('.gravityBtn');
 
-function initBoard(){
-  board=Array.from({length:SIZE},()=>Array(SIZE).fill(0));
-  board[3][3]=-1; board[3][4]=1; board[4][3]=1; board[4][4]=-1;
-  current=1;
-  boardHistory=[JSON.stringify(board)];
-  messageEl.textContent='黒の手番です';
-  messageEl.classList.remove('game-over');
-  setButtons(true);
+function startGame(size) {
+  SIZE = size;
+  document.getElementById('boardSelection').classList.add('hidden');
+  document.getElementById('gameArea').classList.remove('hidden');
+  initBoard();
 }
 
-function render(){
-  boardEl.innerHTML='';
-  const valid=getValidMoves(board,current);
-  for(let r=0;r<SIZE;r++){
-    for(let c=0;c<SIZE;c++){
-      const cell=document.createElement('div');
-      cell.className='cell';
-      if(board[r][c]!==0){
-        const p=document.createElement('div');
-        p.className='piece '+(board[r][c]===1?'black':'white');
+function backToSelection() {
+  document.getElementById('boardSelection').classList.remove('hidden');
+  document.getElementById('gameArea').classList.add('hidden');
+}
+
+function initBoard() {
+  board = Array.from({length: SIZE}, () => Array(SIZE).fill(0));
+  const center = Math.floor(SIZE / 2);
+  board[center-1][center-1] = -1;
+  board[center-1][center] = 1;
+  board[center][center-1] = 1;
+  board[center][center] = -1;
+  current = 1;
+  boardHistory = [JSON.stringify(board)];
+  messageEl.textContent = '黒の手番です';
+  messageEl.classList.remove('game-over');
+  setButtons(true);
+  render();
+}
+
+function render() {
+  boardEl.innerHTML = '';
+  boardEl.className = `board size-${SIZE}`;
+  const valid = getValidMoves(board, current);
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      const cell = document.createElement('div');
+      cell.className = `cell size-${SIZE}`;
+      if (board[r][c] !== 0) {
+        const p = document.createElement('div');
+        p.className = `piece size-${SIZE} ` + (board[r][c] === 1 ? 'black' : 'white');
         cell.appendChild(p);
-      }else if(valid[r][c]&&!animating){
-        cell.classList.add(current===1?'valid-black':'valid-white');
+      } else if (valid[r][c] && !animating) {
+        cell.classList.add(current === 1 ? 'valid-black' : 'valid-white');
       }
-      if(!animating){
-        cell.addEventListener('click',()=>onCellClick(r,c));
+      if (!animating) {
+        cell.addEventListener('click', () => onCellClick(r, c));
       }
       boardEl.appendChild(cell);
     }
   }
-  const counts=countPieces(board);
-  blackCountEl.textContent=counts.black;
-  whiteCountEl.textContent=counts.white;
-  turnDisplay.textContent=current===1?'黒':'白';
+  const counts = countPieces(board);
+  blackCountEl.textContent = counts.black;
+  whiteCountEl.textContent = counts.white;
+  turnDisplay.textContent = current === 1 ? '黒' : '白';
 }
 
-function inBounds(r,c){return r>=0&&r<SIZE&&c>=0&&c<SIZE}
-const DIRS=[[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
+function inBounds(r, c) {
+  return r >= 0 && r < SIZE && c >= 0 && c < SIZE;
+}
 
-function getValidMoves(bd,player){
-  const valid=Array.from({length:SIZE},()=>Array(SIZE).fill(false));
-  for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){
-    if(bd[r][c]!==0) continue;
-    for(const [dr,dc] of DIRS){
-      let rr=r+dr,cc=c+dc;let cnt=0;
-      while(inBounds(rr,cc)&&bd[rr][cc]===-player){rr+=dr;cc+=dc;cnt++;}
-      if(cnt>0&&inBounds(rr,cc)&&bd[rr][cc]===player){valid[r][c]=true;break;}
+const DIRS = [[-1,0], [1,0], [0,-1], [0,1], [-1,-1], [-1,1], [1,-1], [1,1]];
+
+function getValidMoves(bd, player) {
+  const valid = Array.from({length: SIZE}, () => Array(SIZE).fill(false));
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      if (bd[r][c] !== 0) continue;
+      for (const [dr, dc] of DIRS) {
+        let rr = r + dr, cc = c + dc, cnt = 0;
+        while (inBounds(rr, cc) && bd[rr][cc] === -player) {
+          rr += dr;
+          cc += dc;
+          cnt++;
+        }
+        if (cnt > 0 && inBounds(rr, cc) && bd[rr][cc] === player) {
+          valid[r][c] = true;
+          break;
+        }
+      }
     }
   }
   return valid;
 }
 
-function applyMove(r,c,player){
-  board[r][c]=player;
-  for(const[dr,dc]of DIRS){
-    let rr=r+dr,cc=c+dc;let toFlip=[];
-    while(inBounds(rr,cc)&&board[rr][cc]===-player){toFlip.push([rr,cc]);rr+=dr;cc+=dc;}
-    if(inBounds(rr,cc)&&board[rr][cc]===player){for(const[fr,fc]of toFlip)board[fr][fc]=player;}
+function applyMove(r, c, player) {
+  board[r][c] = player;
+  for (const [dr, dc] of DIRS) {
+    let rr = r + dr, cc = c + dc, toFlip = [];
+    while (inBounds(rr, cc) && board[rr][cc] === -player) {
+      toFlip.push([rr, cc]);
+      rr += dr;
+      cc += dc;
+    }
+    if (inBounds(rr, cc) && board[rr][cc] === player) {
+      for (const [fr, fc] of toFlip) board[fr][fc] = player;
+    }
   }
   render();
-  messageEl.textContent=(player===1?'黒':'白')+'が石を置いて返しました。';
+  messageEl.textContent = (player === 1 ? '黒' : '白') + 'が石を置いて返しました。';
 }
 
-function countPieces(bd){let black=0,white=0;for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){if(bd[r][c]===1)black++;else if(bd[r][c]===-1)white++;}return{black,white};}
-
-function onCellClick(r,c){if(animating)return;const valid=getValidMoves(board,current);if(!valid[r][c])return;applyMove(r,c,current);endTurn();}
-
-function endTurn(){
-    if(checkGameEnd()){setButtons(false);return;}
-    current=-current;
-    const valid=getValidMoves(board,current);
-    
-    if(!valid.flat().some(v=>v)){
-      messageEl.textContent=(current===1?'黒':'白')+'は置ける場所がありません。重力をかける向きを選択してください。';
-      render();
-      updateGravityButtons();
-
-      const anyGravityEnabled = Array.from(gravityBtns).some(btn => !btn.disabled);
-      if(!anyGravityEnabled){
-        messageEl.textContent=(current===1?'黒':'白')+'は置けず、重力もかけられません。スキップします。';
-        setTimeout(()=>{
-          endTurn();
-        }, 1500);
-        return;
-      }
-    }else{
-      messageEl.textContent=(current===1?'黒':'白')+'の手番です';
-      render();
+function countPieces(bd) {
+  let black = 0, white = 0;
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      if (bd[r][c] === 1) black++;
+      else if (bd[r][c] === -1) white++;
     }
-    
-    if(checkGameEnd()){setButtons(false);return;}
   }
+  return {black, white};
+}
 
-async function applyGravity(dir){
-  animating=true;
-  setButtons(false);
-  let moved=false;
-  const delay=50;
-  while(true){
-    let stepMoved=false;
-    if(dir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r+1][c]===0){board[r+1][c]=board[r][c];board[r][c]=0;stepMoved=true;}}}}
-    else if(dir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(board[r][c]!==0&&board[r-1][c]===0){board[r-1][c]=board[r][c];board[r][c]=0;stepMoved=true;}}}}
-    else if(dir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c-1]===0){board[r][c-1]=board[r][c];board[r][c]=0;stepMoved=true;}}}}
-    else if(dir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(board[r][c]!==0&&board[r][c+1]===0){board[r][c+1]=board[r][c];board[r][c]=0;stepMoved=true;}}}}
-    if(!stepMoved) break;
-    moved=true;
+function onCellClick(r, c) {
+  if (animating) return;
+  const valid = getValidMoves(board, current);
+  if (!valid[r][c]) return;
+  applyMove(r, c, current);
+  endTurn();
+}
+
+function endTurn() {
+  if (checkGameEnd()) {
+    setButtons(false);
+    return;
+  }
+  current = -current;
+  const valid = getValidMoves(board, current);
+  
+  if (!valid.flat().some(v => v)) {
+    messageEl.textContent = (current === 1 ? '黒' : '白') + 'は置ける場所がありません。重力をかける向きを選択してください。';
     render();
-    await new Promise(res=>setTimeout(res,delay));
+    updateGravityButtons();
+
+    const anyGravityEnabled = Array.from(gravityBtns).some(btn => !btn.disabled);
+    if (!anyGravityEnabled) {
+      messageEl.textContent = (current === 1 ? '黒' : '白') + 'は置けず、重力もかけられません。スキップします。';
+      setTimeout(() => {
+        endTurn();
+      }, 1500);
+      return;
+    }
+  } else {
+    messageEl.textContent = (current === 1 ? '黒' : '白') + 'の手番です';
+    render();
   }
-  animating=false;
+  
+  if (checkGameEnd()) {
+    setButtons(false);
+    return;
+  }
+}
+
+async function applyGravity(dir) {
+  animating = true;
+  setButtons(false);
+  let moved = false;
+  const delay = 50;
+  while (true) {
+    let stepMoved = false;
+    if (dir === 'down') {
+      for (let r = SIZE - 2; r >= 0; r--) {
+        for (let c = 0; c < SIZE; c++) {
+          if (board[r][c] !== 0 && board[r+1][c] === 0) {
+            board[r+1][c] = board[r][c];
+            board[r][c] = 0;
+            stepMoved = true;
+          }
+        }
+      }
+    } else if (dir === 'up') {
+      for (let r = 1; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          if (board[r][c] !== 0 && board[r-1][c] === 0) {
+            board[r-1][c] = board[r][c];
+            board[r][c] = 0;
+            stepMoved = true;
+          }
+        }
+      }
+    } else if (dir === 'left') {
+      for (let c = 1; c < SIZE; c++) {
+        for (let r = 0; r < SIZE; r++) {
+          if (board[r][c] !== 0 && board[r][c-1] === 0) {
+            board[r][c-1] = board[r][c];
+            board[r][c] = 0;
+            stepMoved = true;
+          }
+        }
+      }
+    } else if (dir === 'right') {
+      for (let c = SIZE - 2; c >= 0; c--) {
+        for (let r = 0; r < SIZE; r++) {
+          if (board[r][c] !== 0 && board[r][c+1] === 0) {
+            board[r][c+1] = board[r][c];
+            board[r][c] = 0;
+            stepMoved = true;
+          }
+        }
+      }
+    }
+    if (!stepMoved) break;
+    moved = true;
+    render();
+    await new Promise(res => setTimeout(res, delay));
+  }
+  animating = false;
   boardHistory.push(JSON.stringify(board));
-  messageEl.textContent=(current===1?'黒':'白')+'が重力をかけました。';
+  messageEl.textContent = (current === 1 ? '黒' : '白') + 'が重力をかけました。';
   setButtons(true);
-  if(!checkGameEnd()){endTurn();}
-  else{setButtons(false);document.getElementById('resetBtn').disabled=false;}
+  if (!checkGameEnd()) {
+    endTurn();
+  } else {
+    setButtons(false);
+    document.getElementById('resetBtn').disabled = false;
+    document.getElementById('backBtn').disabled = false;
+  }
 }
 
-function setButtons(enabled){
-  gravityBtns.forEach(btn=>btn.disabled=!enabled);
-  document.getElementById('resetBtn').disabled=false;
-  if(enabled) updateGravityButtons();
+function setButtons(enabled) {
+  gravityBtns.forEach(btn => btn.disabled = !enabled);
+  document.getElementById('resetBtn').disabled = false;
+  document.getElementById('backBtn').disabled = false;
+  if (enabled) updateGravityButtons();
 }
 
-function simulateGravity(bd,dir){
-  let testBoard=bd.map(r=>r.slice());
-  let moved=false;
-  let iterations=0;
-  while(iterations<100){
-    let stepMoved=false;
-    if(dir==='down'){for(let r=SIZE-2;r>=0;r--){for(let c=0;c<SIZE;c++){if(testBoard[r][c]!==0&&testBoard[r+1][c]===0){testBoard[r+1][c]=testBoard[r][c];testBoard[r][c]=0;stepMoved=true;}}}}
-    else if(dir==='up'){for(let r=1;r<SIZE;r++){for(let c=0;c<SIZE;c++){if(testBoard[r][c]!==0&&testBoard[r-1][c]===0){testBoard[r-1][c]=testBoard[r][c];testBoard[r][c]=0;stepMoved=true;}}}}
-    else if(dir==='left'){for(let c=1;c<SIZE;c++){for(let r=0;r<SIZE;r++){if(testBoard[r][c]!==0&&testBoard[r][c-1]===0){testBoard[r][c-1]=testBoard[r][c];testBoard[r][c]=0;stepMoved=true;}}}}
-    else if(dir==='right'){for(let c=SIZE-2;c>=0;c--){for(let r=0;r<SIZE;r++){if(testBoard[r][c]!==0&&testBoard[r][c+1]===0){testBoard[r][c+1]=testBoard[r][c];testBoard[r][c]=0;stepMoved=true;}}}}
-    if(!stepMoved) break;
-    moved=true;
+function simulateGravity(bd, dir) {
+  let testBoard = bd.map(r => r.slice());
+  let moved = false;
+  let iterations = 0;
+  while (iterations < 100) {
+    let stepMoved = false;
+    if (dir === 'down') {
+      for (let r = SIZE - 2; r >= 0; r--) {
+        for (let c = 0; c < SIZE; c++) {
+          if (testBoard[r][c] !== 0 && testBoard[r+1][c] === 0) {
+            testBoard[r+1][c] = testBoard[r][c];
+            testBoard[r][c] = 0;
+            stepMoved = true;
+          }
+        }
+      }
+    } else if (dir === 'up') {
+      for (let r = 1; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          if (testBoard[r][c] !== 0 && testBoard[r-1][c] === 0) {
+            testBoard[r-1][c] = testBoard[r][c];
+            testBoard[r][c] = 0;
+            stepMoved = true;
+          }
+        }
+      }
+    } else if (dir === 'left') {
+      for (let c = 1; c < SIZE; c++) {
+        for (let r = 0; r < SIZE; r++) {
+          if (testBoard[r][c] !== 0 && testBoard[r][c-1] === 0) {
+            testBoard[r][c-1] = testBoard[r][c];
+            testBoard[r][c] = 0;
+            stepMoved = true;
+          }
+        }
+      }
+    } else if (dir === 'right') {
+      for (let c = SIZE - 2; c >= 0; c--) {
+        for (let r = 0; r < SIZE; r++) {
+          if (testBoard[r][c] !== 0 && testBoard[r][c+1] === 0) {
+            testBoard[r][c+1] = testBoard[r][c];
+            testBoard[r][c] = 0;
+            stepMoved = true;
+          }
+        }
+      }
+    }
+    if (!stepMoved) break;
+    moved = true;
     iterations++;
   }
-  return {testBoard,moved};
+  return {testBoard, moved};
 }
 
-function updateGravityButtons(){
-  gravityBtns.forEach(btn=>{
-    const testDir=btn.dataset.dir;
-    const {testBoard,moved}=simulateGravity(board,testDir);
-    const testBoardStr=JSON.stringify(testBoard);
-    if(!moved||boardHistory.includes(testBoardStr)){
-      btn.disabled=true;
-    }else{
-      btn.disabled=false;
+function updateGravityButtons() {
+  gravityBtns.forEach(btn => {
+    const testDir = btn.dataset.dir;
+    const {testBoard, moved} = simulateGravity(board, testDir);
+    const testBoardStr = JSON.stringify(testBoard);
+    if (!moved || boardHistory.includes(testBoardStr)) {
+      btn.disabled = true;
+    } else {
+      btn.disabled = false;
     }
   });
 }
 
-function checkGameEnd(){
-  const counts=countPieces(board);
-  const validBlack=getValidMoves(board,1);
-  const validWhite=getValidMoves(board,-1);
-  const blackCan=validBlack.flat().some(v=>v);
-  const whiteCan=validWhite.flat().some(v=>v);
-  const filled=counts.black+counts.white===SIZE*SIZE;
-  if(filled||(!blackCan&&!whiteCan)){
-    let msg='';
-    if(counts.black>counts.white){msg='黒の勝ち！ ('+counts.black+' 対 '+counts.white+')';}
-    else if(counts.white>counts.black){msg='白の勝ち！ ('+counts.white+' 対 '+counts.black+')';}
-    else{msg='引き分け！ ('+counts.black+' 対 '+counts.white+')';}
-    messageEl.textContent=msg;
+function checkGameEnd() {
+  const counts = countPieces(board);
+  const validBlack = getValidMoves(board, 1);
+  const validWhite = getValidMoves(board, -1);
+  const blackCan = validBlack.flat().some(v => v);
+  const whiteCan = validWhite.flat().some(v => v);
+  const filled = counts.black + counts.white === SIZE * SIZE;
+  if (filled || (!blackCan && !whiteCan)) {
+    let msg = '';
+    if (counts.black > counts.white) {
+      msg = '黒の勝ち！ (' + counts.black + ' 対 ' + counts.white + ')';
+    } else if (counts.white > counts.black) {
+      msg = '白の勝ち！ (' + counts.white + ' 対 ' + counts.black + ')';
+    } else {
+      msg = '引き分け！ (' + counts.black + ' 対 ' + counts.white + ')';
+    }
+    messageEl.textContent = msg;
     messageEl.classList.add('game-over');
     return true;
   }
   return false;
 }
 
-document.getElementById('resetBtn').addEventListener('click',()=>{initBoard();render();});
-gravityBtns.forEach(btn=>btn.addEventListener('click',()=>{if(!animating)applyGravity(btn.dataset.dir);}));
+document.getElementById('resetBtn').addEventListener('click', () => {
+  initBoard();
+  render();
+});
 
-initBoard();render();
+document.getElementById('backBtn').addEventListener('click', backToSelection);
+
+gravityBtns.forEach(btn => btn.addEventListener('click', () => {
+  if (!animating) applyGravity(btn.dataset.dir);
+}));
 </script>
 </body>
 </html>
