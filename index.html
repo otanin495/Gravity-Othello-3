@@ -547,6 +547,9 @@ function onCellClick(r, c) {
   const valid = getValidMoves(board, current);
   if (!valid[r][c]) return;
   applyMove(r, c, current);
+
+  boardHistory.push(JSON.stringify(board));
+  
   endTurn();
 }
 
@@ -555,7 +558,9 @@ function endTurn() {
     setButtons(false);
     return;
   }
+  
   current = -current;
+  
   const valid = getValidMoves(board, current);
   
   if (!valid.flat().some(v => v)) {
@@ -635,16 +640,30 @@ async function applyGravity(dir) {
     render();
     await new Promise(res => setTimeout(res, delay));
   }
-  animating = false;
+
   boardHistory.push(JSON.stringify(board));
-  messageEl.textContent = (current === 1 ? '黒' : '白') + 'が重力をかけました。';
-  setButtons(true);
-  if (!checkGameEnd()) {
-    endTurn();
-  } else {
-    setButtons(false);
+
+  animating = false;
+
+  const valid = getValidMoves(board, current);
+  const canPlace = valid.flat().some(v => v);
+  
+  if (canPlace) {
+    gravityBtns.forEach(btn => btn.disabled = true);
     document.getElementById('resetBtn').disabled = false;
     document.getElementById('backBtn').disabled = false;
+    messageEl.textContent = (current === 1 ? '黒' : '白') + 'が重力をかけました。石を置いてください。';
+    render();
+  } else {
+    messageEl.textContent = (current === 1 ? '黒' : '白') + 'が重力をかけました。';
+    setButtons(true);
+    if (!checkGameEnd()) {
+      endTurn();
+    } else {
+      setButtons(false);
+      document.getElementById('resetBtn').disabled = false;
+      document.getElementById('backBtn').disabled = false;
+    }
   }
 }
 
@@ -714,7 +733,15 @@ function updateGravityButtons() {
     const testDir = btn.dataset.dir;
     const {testBoard, moved} = simulateGravity(board, testDir);
     const testBoardStr = JSON.stringify(testBoard);
-    if (!moved || boardHistory.includes(testBoardStr)) {
+
+    if (!moved) {
+      btn.disabled = true;
+      return;
+    }
+
+    const isPastBoard = boardHistory.includes(testBoardStr);
+    
+    if (isPastBoard) {
       btn.disabled = true;
     } else {
       btn.disabled = false;
