@@ -453,6 +453,7 @@ function initBoard() {
   board[center][center-1] = 1;
   board[center][center] = -1;
   current = 1;
+  // 初期盤面を履歴に保存
   boardHistory = [JSON.stringify(board)];
   messageEl.textContent = '黒の手番です';
   messageEl.classList.remove('game-over');
@@ -547,7 +548,8 @@ function onCellClick(r, c) {
   const valid = getValidMoves(board, current);
   if (!valid[r][c]) return;
   applyMove(r, c, current);
-
+  
+  // 石を置いた後の盤面を履歴に追加
   boardHistory.push(JSON.stringify(board));
   
   endTurn();
@@ -640,21 +642,26 @@ async function applyGravity(dir) {
     render();
     await new Promise(res => setTimeout(res, delay));
   }
-
+  
+  // 重力をかけた後の盤面を履歴に追加
   boardHistory.push(JSON.stringify(board));
-
+  
+  // アニメーション終了
   animating = false;
-
+  
+  // 重力をかけた後、同じプレイヤーが石を置けるかチェック
   const valid = getValidMoves(board, current);
   const canPlace = valid.flat().some(v => v);
   
   if (canPlace) {
+    // 石を置ける場合は、重力ボタンを無効化して石を置くことを強制
     gravityBtns.forEach(btn => btn.disabled = true);
     document.getElementById('resetBtn').disabled = false;
     document.getElementById('backBtn').disabled = false;
     messageEl.textContent = (current === 1 ? '黒' : '白') + 'が重力をかけました。石を置いてください。';
     render();
   } else {
+    // 石を置けない場合は手番を終了
     messageEl.textContent = (current === 1 ? '黒' : '白') + 'が重力をかけました。';
     setButtons(true);
     if (!checkGameEnd()) {
@@ -733,12 +740,14 @@ function updateGravityButtons() {
     const testDir = btn.dataset.dir;
     const {testBoard, moved} = simulateGravity(board, testDir);
     const testBoardStr = JSON.stringify(testBoard);
-
+    
+    // 条件1: 盤面が変わらない場合は無効化
     if (!moved) {
       btn.disabled = true;
       return;
     }
-
+    
+    // 条件2: 重力をかけた結果が過去の盤面（履歴内）と一致する場合は無効化
     const isPastBoard = boardHistory.includes(testBoardStr);
     
     if (isPastBoard) {
